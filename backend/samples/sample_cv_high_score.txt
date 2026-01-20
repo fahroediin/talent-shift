@@ -1,0 +1,83 @@
+CURRICULUM VITAE
+
+================================================================================
+ANDI WIJAYA
+================================================================================
+
+Email: andi.wijaya@email.com
+Phone: +62 812-3456-7890
+Location: Jakarta
+
+================================================================================
+SUMMARY
+================================================================================
+
+Experienced Backend Developer with 5 years of experience in building scalable 
+web applications using Python, SQL, and RESTful APIs. Passionate about clean 
+code and best practices.
+
+================================================================================
+EDUCATION
+================================================================================
+
+S1 Teknik Informatika
+Universitas Indonesia (UI)
+Graduated: 2019
+GPA: 3.75/4.00
+
+================================================================================
+WORK EXPERIENCE
+================================================================================
+
+Senior Backend Developer
+PT Gojek Indonesia
+January 2022 - Present (3 years)
+
+- Developed microservices using Python and FastAPI
+- Designed and optimized SQL databases using PostgreSQL
+- Built REST API endpoints serving 1M+ requests/day
+- Implemented Docker containerization for deployments
+- Managed services on AWS (EC2, RDS, S3)
+
+Backend Developer
+PT Tokopedia
+July 2019 - December 2021 (2.5 years)
+
+- Built backend services using Python Django framework
+- Wrote complex SQL queries for data analytics
+- Developed REST API for mobile applications
+- Collaborated with DevOps team on CI/CD pipelines
+
+================================================================================
+TECHNICAL SKILLS
+================================================================================
+
+Programming Languages: Python, JavaScript, Go
+Databases: PostgreSQL, MySQL, MongoDB, Redis
+Frameworks: FastAPI, Django, Flask
+DevOps: Docker, Kubernetes, AWS, GCP
+Tools: Git, Linux, Nginx, RabbitMQ
+Other: REST API, GraphQL, Microservices, Agile
+
+================================================================================
+CERTIFICATIONS & TRAINING
+================================================================================
+
+- Hacktiv8 Full Stack Developer Program (2019)
+- AWS Certified Developer Associate (2021)
+- Dicoding - Backend Developer Path (2020)
+
+================================================================================
+PORTFOLIO
+================================================================================
+
+GitHub: https://github.com/andiwijaya
+LinkedIn: https://linkedin.com/in/andiwijaya
+Personal Website: https://andiwijaya.dev
+
+Projects:
+1. E-commerce API - REST API for online marketplace (Python, FastAPI)
+2. Payment Gateway Integration - Microservice for payment processing
+3. Data Pipeline - ETL service using Python and PostgreSQL
+
+================================================================================
