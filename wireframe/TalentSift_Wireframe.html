@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentShift - ATS CV Screening</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8f6f2;
+            color: #1f2937;
+        }
+
+        /* Layout */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: linear-gradient(180deg, #f0f4ff 0%, #e8efff 100%);
+            padding: 20px 12px;
+            border-right: 1px solid #e0e7ff;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 28px;
+            color: #7c3aed;
+            padding: 0 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .menu-item {
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #4b5563;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(124, 58, 237, 0.08);
+            color: #7c3aed;
+        }
+
+        .menu-item.active {
+            background: rgba(124, 58, 237, 0.12);
+            color: #7c3aed;
+            font-weight: 600;
+            border-left: 3px solid #7c3aed;
+        }
+
+        .menu-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-section {
+            margin-bottom: 20px;
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding-left: 14px;
+            margin-top: 16px;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 220px;
+            padding: 24px 32px;
+            background: #f8f6f2;
+            min-height: 100vh;
+        }
+
+        /* Screen container */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .breadcrumb {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb span {
+            color: #6b7280;
+        }
+
+        /* Connection Banner */
+        .connection-banner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #166534;
+            font-size: 13px;
+        }
+
+        .connection-icon {
+            color: #22c55e;
+            font-size: 16px;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-value.green {
+            color: #22c55e;
+        }
+
+        .stat-value.red {
+            color: #ef4444;
+        }
+
+        .stat-value.purple {
+            color: #7c3aed;
+        }
+
+        .stat-label {
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 260px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #e5e1dc;
+            background: white;
+            color: #1f2937;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        .btn-search {
+            background: white;
+            border: 1.5px solid #7c3aed;
+            color: #7c3aed;
+        }
+
+        .btn-search:hover {
+            background: #f5f3ff;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1.5px solid #7c3aed;
+            color: #7c3aed;
+        }
+
+        .btn-outline:hover {
+            background: #f5f3ff;
+        }
+
+        .btn-success {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .filter-select {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #e5e1dc;
+            background: white;
+            color: #6b7280;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            min-width: 110px;
+        }
+
+        /* Table Header */
+        .table-header {
+            display: grid;
+            grid-template-columns: 50px 1fr 80px 200px 80px 100px 80px 70px;
+            padding: 10px 16px;
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Candidate Row */
+        .candidate-row {
+            display: grid;
+            grid-template-columns: 50px 1fr 80px 200px 80px 100px 80px 70px;
+            padding: 14px 16px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .rank {
+            font-weight: 600;
+            color: #4b5563;
+            font-size: 14px;
+        }
+
+        .candidate-info .name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 13px;
+        }
+
+        .candidate-info .email {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        /* Score */
+        .score-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .score-value {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .score-value.high {
+            color: #22c55e;
+        }
+
+        .score-value.mid {
+            color: #f59e0b;
+        }
+
+        .score-value.low {
+            color: #ef4444;
+        }
+
+        .score-bar {
+            width: 60px;
+            height: 5px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .score-bar-fill.high {
+            background: #22c55e;
+        }
+
+        .score-bar-fill.mid {
+            background: #f59e0b;
+        }
+
+        .score-bar-fill.low {
+            background: #ef4444;
+        }
+
+        /* Tags */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .tag-skill {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .tag-gray {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .tag-purple {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .tag-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Education Badge */
+        .education-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: #f3e8ff;
+            color: #7c3aed;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-review {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .status-shortlisted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Action Button */
+        .btn-view {
+            padding: 6px 14px;
+            background: white;
+            border: 1.5px solid #7c3aed;
+            color: #7c3aed;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-view:hover {
+            background: #f5f3ff;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-title {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed #c4b5fd;
+            border-radius: 14px;
+            padding: 50px;
+            text-align: center;
+            background: #faf5ff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-zone:hover {
+            background: #f3e8ff;
+            border-color: #a78bfa;
+        }
+
+        .upload-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            color: #7c3aed;
+        }
+
+        .upload-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 6px;
+        }
+
+        .upload-subtitle {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .upload-formats {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .format-badge {
+            padding: 4px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #4b5563;
+            background: white;
+        }
+
+        /* Upload Progress */
+        .upload-progress {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .upload-progress-title {
+            font-size: 11px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .upload-file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            gap: 10px;
+        }
+
+        .file-icon {
+            font-size: 18px;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1f2937;
+        }
+
+        .file-size {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .file-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .file-status.scored {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .file-score {
+            font-weight: 700;
+            color: #f59e0b;
+            font-size: 14px;
+        }
+
+        .upload-summary {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0ebe5;
+        }
+
+        .upload-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .upload-summary-row .label {
+            color: #6b7280;
+        }
+
+        .upload-summary-row .value {
+            font-weight: 600;
+        }
+
+        .upload-summary-row .value.green {
+            color: #22c55e;
+        }
+
+        .upload-summary-row .value.orange {
+            color: #f59e0b;
+        }
+
+        .btn-dashboard {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 16px;
+            font-family: inherit;
+        }
+
+        /* Job Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            color: #6b7280;
+            margin-bottom: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #e5e1dc;
+            background: white;
+            color: #1f2937;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #a78bfa;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Section Title */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #7c3aed;
+            margin-bottom: 14px;
+        }
+
+        /* Weight Slider */
+        .weight-slider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .weight-value {
+            font-weight: 700;
+            color: #7c3aed;
+            min-width: 40px;
+            text-align: right;
+            font-size: 13px;
+        }
+
+        /* Donut Chart */
+        .weight-distribution {
+            position: sticky;
+            top: 20px;
+        }
+
+        .donut-chart {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: conic-gradient(#7c3aed 0deg 54deg,
+                    #22c55e 54deg 144deg,
+                    #f59e0b 144deg 216deg,
+                    #60a5fa 216deg 252deg,
+                    #a855f7 252deg 306deg,
+                    #94a3b8 306deg 360deg);
+            margin: 16px auto;
+            position: relative;
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut-label {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .donut-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #7c3aed;
+        }
+
+        .weight-legend {
+            font-size: 12px;
+        }
+
+        .weight-legend-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            align-items: center;
+        }
+
+        .weight-legend-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4b5563;
+        }
+
+        .weight-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .weight-legend-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .weight-warning {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #92400e;
+            margin-top: 12px;
+        }
+
+        /* Candidate Detail */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .profile-info {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .score-badge-large {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            padding: 14px 24px;
+            border-radius: 12px;
+            color: white;
+            margin-left: auto;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .breakdown-card {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .breakdown-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .breakdown-score {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .breakdown-score.high {
+            color: #22c55e;
+        }
+
+        .breakdown-score.mid {
+            color: #f59e0b;
+        }
+
+        .breakdown-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .breakdown-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .breakdown-fill.high {
+            background: #22c55e;
+        }
+
+        .breakdown-fill.mid {
+            background: #f59e0b;
+        }
+
+        .breakdown-detail {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .breakdown-weight {
+            color: #9ca3af;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .breakdown-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .candidate-row {
+                grid-template-columns: 40px 1fr 60px 120px 60px 80px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">◎</div>
+                TalentShift
+            </div>
+            <div class="menu-section">
+                <div class="menu-item active" onclick="showScreen('dashboard')">
+                    <span class="menu-icon">📊</span> Dashboard
+                </div>
+                <div class="menu-item" onclick="showScreen('jobs')">
+                    <span class="menu-icon">💼</span> Jobs
+                </div>
+                <div class="menu-item" onclick="showScreen('candidates')">
+                    <span class="menu-icon">👥</span> Candidates
+                </div>
+            </div>
+            <div class="menu-section">
+                <div class="menu-label">Settings</div>
+                <div class="menu-item" onclick="showScreen('analytics')">
+                    <span class="menu-icon">📈</span> Analytics
+                </div>
+                <div class="menu-item" onclick="showScreen('settings')">
+                    <span class="menu-icon">⚙️</span> Settings
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- DASHBOARD SCREEN -->
+            <div id="dashboard" class="screen active">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard</h1>
+                    <button class="btn btn-outline">↻ Refresh</button>
+                </div>
+
+                <div class="connection-banner">
+                    <span class="connection-icon">✓</span>
+                    Backend connected - Data real-time dari database
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value purple">7</div>
+                        <div class="stat-label">Total Candidates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value green">0</div>
+                        <div class="stat-label">Shortlisted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value purple">7</div>
+                        <div class="stat-label">In Review</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value red">0</div>
+                        <div class="stat-label">Rejected</div>
+                    </div>
+                </div>
+
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="🔍 Search candidates...">
+                    <button class="btn btn-search">Search</button>
+                    <select class="filter-select">
+                        <option>All Scores</option>
+                        <option>80-100 (High)</option>
+                        <option>60-79 (Medium)</option>
+                        <option>0-59 (Low)</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>In Review</option>
+                        <option>Shortlisted</option>
+                        <option>Rejected</option>
+                    </select>
+                    <button class="btn btn-primary">⬇ Export CSV</button>
+                </div>
+
+                <div class="table-header">
+                    <div>RANK</div>
+                    <div>CANDIDATE</div>
+                    <div>SCORE</div>
+                    <div>SKILLS</div>
+                    <div>EDUCATION</div>
+                    <div>LOCATION</div>
+                    <div>STATUS</div>
+                    <div>ACTIONS</div>
+                </div>
+
+                <div class="candidate-row">
+                    <div class="rank">1</div>
+                    <div class="candidate-info">
+                        <div class="name">ANDI WIJAYA</div>
+                        <div class="email">andi.wijaya@email.com</div>
+                    </div>
+                    <div class="score-container">
+                        <span class="score-value high">99.0</span>
+                        <div class="score-bar">
+                            <div class="score-bar-fill high" style="width: 99%"></div>
+                        </div>
+                    </div>
+                    <div class="skills-container">
+                        <span class="tag tag-skill">Fastapi</span>
+                        <span class="tag tag-skill">Graphql</span>
+                        <span class="tag tag-skill">Django</span>
+                        <span class="tag tag-skill">Restful</span>
+                        <span class="tag tag-gray">+17</span>
+                    </div>
+                    <div><span class="education-badge">S2</span></div>
+                    <div>Jakarta</div>
+                    <div><span class="status-badge status-review">In Review</span></div>
+                    <div><button class="btn-view">View</button></div>
+                </div>
+
+                <div class="candidate-row">
+                    <div class="rank">2</div>
+                    <div class="candidate-info">
+                        <div class="name">ANDI WIJAYA</div>
+                        <div class="email">andi.wijaya@email.com</div>
+                    </div>
+                    <div class="score-container">
+                        <span class="score-value high">99.0</span>
+                        <div class="score-bar">
+                            <div class="score-bar-fill high" style="width: 99%"></div>
+                        </div>
+                    </div>
+                    <div class="skills-container">
+                        <span class="tag tag-skill">Graphql</span>
+                        <span class="tag tag-skill">Nodejs</span>
+                        <span class="tag tag-skill">GO</span>
+                        <span class="tag tag-skill">GIT</span>
+                        <span class="tag tag-gray">+17</span>
+                    </div>
+                    <div><span class="education-badge">S2</span></div>
+                    <div>Jakarta</div>
+                    <div><span class="status-badge status-review">In Review</span></div>
+                    <div><button class="btn-view">View</button></div>
+                </div>
+
+                <div class="candidate-row">
+                    <div class="rank">3</div>
+                    <div class="candidate-info">
+                        <div class="name">IMAM FAHRUDIN</div>
+                        <div class="email">imam.fahrudin.work@gmail.com</div>
+                    </div>
+                    <div class="score-container">
+                        <span class="score-value low">51.9</span>
+                        <div class="score-bar">
+                            <div class="score-bar-fill low" style="width: 52%"></div>
+                        </div>
+                    </div>
+                    <div class="skills-container">
+                        <span class="tag tag-skill">AWS</span>
+                        <span class="tag tag-skill">Agile</span>
+                        <span class="tag tag-skill">Figma</span>
+                        <span class="tag tag-skill">Scrum</span>
+                        <span class="tag tag-gray">+5</span>
+                    </div>
+                    <div><span class="education-badge">S1</span></div>
+                    <div>-</div>
+                    <div><span class="status-badge status-review">In Review</span></div>
+                    <div><button class="btn-view">View</button></div>
+                </div>
+
+                <div class="candidate-row">
+                    <div class="rank">4</div>
+                    <div class="candidate-info">
+                        <div class="name">IMAM FAHRUDIN</div>
+                        <div class="email">imam.fahrudin.work@gmail.com</div>
+                    </div>
+                    <div class="score-container">
+                        <span class="score-value low">51.9</span>
+                        <div class="score-bar">
+                            <div class="score-bar-fill low" style="width: 52%"></div>
+                        </div>
+                    </div>
+                    <div class="skills-container">
+                        <span class="tag tag-skill">Agile</span>
+                        <span class="tag tag-skill">Outsystems</span>
+                        <span class="tag tag-skill">Figma</span>
+                        <span class="tag tag-skill">Restful</span>
+                        <span class="tag tag-gray">+5</span>
+                    </div>
+                    <div><span class="education-badge">S1</span></div>
+                    <div>-</div>
+                    <div><span class="status-badge status-review">In Review</span></div>
+                    <div><button class="btn-view">View</button></div>
+                </div>
+            </div>
+
+            <!-- JOBS SCREEN (Job Template) -->
+            <div id="jobs" class="screen">
+                <div class="page-header">
+                    <h1 class="page-title">Create Job Requirement</h1>
+                    <button class="btn btn-primary">💾 Save Job</button>
+                </div>
+
+                <div class="connection-banner">
+                    <span class="connection-icon">✓</span>
+                    Backend connected - Job templates saved to database
+                </div>
+
+                <div class="form-grid">
+                    <div>
+                        <!-- Basic Information -->
+                        <div class="card">
+                            <div class="card-title">Basic Information</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Job Title</label>
+                                    <input type="text" class="form-input" value="Frontend Developer">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Department</label>
+                                    <select class="form-input">
+                                        <option>Engineering</option>
+                                        <option>Product</option>
+                                        <option>Design</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Education Requirements -->
+                        <div class="card">
+                            <div class="section-title">🎓 EDUCATION REQUIREMENTS</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Minimum Level</label>
+                                    <select class="form-input">
+                                        <option>S1 (Bachelor)</option>
+                                        <option>S2 (Master)</option>
+                                        <option>D3 (Diploma)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Preferred Major (comma separated)</label>
+                                    <input type="text" class="form-input" value="Pendidikan">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Weight</label>
+                                <div class="weight-slider">
+                                    <input type="range" class="slider" value="15" min="0" max="100">
+                                    <span class="weight-value">15%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Required Skills -->
+                        <div class="card">
+                            <div class="section-title">🛠️ REQUIRED SKILLS</div>
+                            <div class="form-group">
+                                <label class="form-label">Required (Must Have)</label>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;">
+                                    <span class="tag tag-skill">Python ✕</span>
+                                    <span class="tag tag-skill">SQL ✕</span>
+                                    <span class="tag tag-skill">REST API ✕</span>
+                                </div>
+                                <input type="text" class="form-input" placeholder="Add skill...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Preferred (Nice to Have)</label>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;">
+                                    <span class="tag tag-purple">Docker ✕</span>
+                                    <span class="tag tag-purple">AWS ✕</span>
+                                </div>
+                                <input type="text" class="form-input" placeholder="Add skill...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Weight</label>
+                                <div class="weight-slider">
+                                    <input type="range" class="slider" value="40" min="0" max="100">
+                                    <span class="weight-value">40%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weight Distribution -->
+                    <div class="weight-distribution">
+                        <div class="card">
+                            <div class="card-title">Weight Distribution</div>
+                            <div class="donut-chart">
+                                <div class="donut-center">
+                                    <span class="donut-label">Total</span>
+                                    <span class="donut-value">110%</span>
+                                </div>
+                            </div>
+                            <div class="weight-legend">
+                                <div class="weight-legend-item">
+                                    <span class="weight-legend-label"><span class="weight-legend-dot"
+                                            style="background: #7c3aed;"></span> Education</span>
+                                    <span class="weight-legend-value">15%</span>
+                                </div>
+                                <div class="weight-legend-item">
+                                    <span class="weight-legend-label"><span class="weight-legend-dot"
+                                            style="background: #22c55e;"></span> Experience</span>
+                                    <span class="weight-legend-value">25%</span>
+                                </div>
+                                <div class="weight-legend-item">
+                                    <span class="weight-legend-label"><span class="weight-legend-dot"
+                                            style="background: #f59e0b;"></span> Skills</span>
+                                    <span class="weight-legend-value">40%</span>
+                                </div>
+                                <div class="weight-legend-item">
+                                    <span class="weight-legend-label"><span class="weight-legend-dot"
+                                            style="background: #60a5fa;"></span> Bootcamp</span>
+                                    <span class="weight-legend-value">10%</span>
+                                </div>
+                                <div class="weight-legend-item">
+                                    <span class="weight-legend-label"><span class="weight-legend-dot"
+                                            style="background: #a855f7;"></span> Portfolio</span>
+                                    <span class="weight-legend-value">15%</span>
+                                </div>
+                                <div class="weight-legend-item">
+                                    <span class="weight-legend-label"><span class="weight-legend-dot"
+                                            style="background: #94a3b8;"></span> Location</span>
+                                    <span class="weight-legend-value">5%</span>
+                                </div>
+                            </div>
+                            <div class="weight-warning">
+                                ⚠️ Weights should total 100% (currently 110%)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CANDIDATES SCREEN (Upload) -->
+            <div id="candidates" class="screen">
+                <div class="breadcrumb">Jobs → <span>Frontend Developer</span> → Upload CVs</div>
+                <h1 class="page-title" style="margin-bottom: 16px;">Upload CV Files</h1>
+
+                <div class="connection-banner">
+                    <span class="connection-icon">✓</span>
+                    Backend connected - CV akan di-parse dan disimpan ke database
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                    <div>
+                        <div class="upload-zone">
+                            <div class="upload-icon">☁️↑</div>
+                            <div class="upload-title">Drag & drop CV files here</div>
+                            <div class="upload-subtitle">or click to browse</div>
+                            <div class="upload-formats">
+                                <span class="format-badge">PDF</span>
+                                <span class="format-badge">DOCX</span>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-top: 16px;">
+                            <div class="card-title">Job Requirements</div>
+                            <h3 style="margin-bottom: 12px; color: #1f2937; font-size: 16px;">Frontend Developer</h3>
+                            <p style="color: #6b7280; margin-bottom: 10px; font-size: 13px;">Required Skills:</p>
+                            <div style="margin-bottom: 14px;">
+                                <span class="tag tag-purple">Python</span>
+                                <span class="tag tag-purple">SQL</span>
+                                <span class="tag tag-purple">REST API</span>
+                            </div>
+                            <p style="color: #6b7280; margin-bottom: 10px; font-size: 13px;">Preferred:</p>
+                            <div>
+                                <span class="tag tag-blue">Docker</span>
+                                <span class="tag tag-blue">AWS</span>
+                                <span class="tag tag-blue">PostgreSQL</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upload-progress">
+                        <div class="upload-progress-title">Upload Progress</div>
+
+                        <div class="upload-file-item">
+                            <span class="file-icon">📄</span>
+                            <div class="file-info">
+                                <div class="file-name">ANDI WIJAYA</div>
+                                <div class="file-size">36.7 KB</div>
+                            </div>
+                            <span class="file-status scored">✓ Scored</span>
+                            <span class="file-score">99.0</span>
+                            <span style="cursor: pointer; color: #9ca3af;">✕</span>
+                        </div>
+
+                        <div class="upload-summary">
+                            <div class="upload-summary-row">
+                                <span class="label">Uploaded:</span>
+                                <span class="value">1 files</span>
+                            </div>
+                            <div class="upload-summary-row">
+                                <span class="label">Scored:</span>
+                                <span class="value green">1 files</span>
+                            </div>
+                            <div class="upload-summary-row">
+                                <span class="label">Pending:</span>
+                                <span class="value orange">0 files</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-dashboard">View Dashboard</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS SCREEN -->
+            <div id="analytics" class="screen">
+                <h1 class="page-title">Analytics</h1>
+                <div class="connection-banner">
+                    <span class="connection-icon">✓</span>
+                    Analytics dashboard coming soon
+                </div>
+            </div>
+
+            <!-- SETTINGS SCREEN -->
+            <div id="settings" class="screen">
+                <h1 class="page-title">Settings</h1>
+                <div class="connection-banner">
+                    <span class="connection-icon">✓</span>
+                    Settings page coming soon
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            // Update menu items
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            event.target.closest('.menu-item').classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
